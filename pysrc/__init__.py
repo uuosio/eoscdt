@@ -13,7 +13,7 @@ def run_cmd(cmd: str) -> int:
     dir_name = os.path.join(dir_name, "release")
     cmd = os.path.join(dir_name, f"bin/{cmd}")
     sys.argv[0] = cmd
-    return subprocess.call(cmd, stdout=sys.stdout, stderr=sys.stderr)
+    return subprocess.call(sys.argv, stdout=sys.stdout, stderr=sys.stderr)
 
 def run_cdt_cpp():
     return run_cmd('cdt-cpp')
