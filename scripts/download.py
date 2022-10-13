@@ -5,9 +5,9 @@ import subprocess
 
 version = sys.argv[1]
 files = [
-    f'gscdk-{version}-py3-none-macosx_10_15_x86_64.whl',
-    f'gscdk-{version}-py3-none-manylinux1_x86_64.whl',
-    f'gscdk-{version}-py3-none-win_amd64.whl',
+    f'pycdt-{version}-py3-none-macosx_10_15_x86_64.whl',
+    f'pycdt-{version}-py3-none-manylinux1_x86_64.whl',
+    f'pycdt-{version}-py3-none-win_amd64.whl',
 ]
 
 url = f'https://github.com/uuosio/pycdt/releases/download/v{version}/'
