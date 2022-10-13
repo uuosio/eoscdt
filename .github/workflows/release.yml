@@ -1,4 +1,4 @@
-name: release pycdt
+name: release eoscdt
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       run:
         shell: bash
     env:
-      PYCDT_VERSION: 0.1.0
+      EOSCDT_VERSION: 0.1.0
       CDT_VERSION: 0.1.0
     strategy:
       matrix:
@@ -34,14 +34,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Build pycdt
+      - name: Build eoscdt
         run: |
           python setup.py sdist 
       - name: Downloading whl files
         if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-20.04' }}
         run: |
           cd dist
-          python ../scripts/download.py ${{ env.PYCDT_VERSION }}
+          python ../scripts/download.py ${{ env.EOSCDT_VERSION }}
       - name: Publish a Python distribution to PyPI
         if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-20.04' }}
         uses: pypa/gh-action-pypi-publish@release/v1

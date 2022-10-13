@@ -1,4 +1,4 @@
-name: build pycdt
+name: build eoscdt
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       run:
         shell: bash
     env:
-      PYCDT_VERSION: 0.1.0
+      EOSCDT_VERSION: 0.1.0
       CDT_VERSION: 0.1.0
     strategy:
       matrix:
@@ -74,22 +74,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install wheel
-      - name: Build pycdt
+      - name: Build eoscdt
         run: |
           python setup.py sdist bdist_wheel --plat-name ${{ steps.platname.outputs.value }} > setup.log
       - name: get whl file
         id: whlfile
         run: |
           echo "::set-output name=value::$(python scripts/get_whl_file.py)"
-      - name: Install pycdt
+      - name: Install eoscdt
         run: |
           python -m pip install ./dist/${{ steps.whlfile.outputs.value }}
       # - name: Setup upterm session
       #   uses: lhotari/action-upterm@v1
-      - name: Test pycdt
+      - name: Test eoscdt
         run: |
           cdt-cpp --help
-      - name: release-pycdt
+      - name: release-eoscdt
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:

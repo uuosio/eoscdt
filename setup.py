@@ -13,18 +13,18 @@ version = platform.python_version_tuple()
 version = '%s.%s' % (version[0], version[1])
 
 setup(
-    name="pycdt",
+    name="eoscdt",
     version="0.1.0",
-    description="pycdt project",
-    author='The PYCDT Team',
+    description="eoscdt project",
+    author='The EOSCDT Team',
     license="MIT",
     packages=[
-        'pycdt',
+        'eoscdt',
     ],
     package_dir={
-        'pycdt': 'pysrc',
+        'eoscdt': 'pysrc',
     },
-    package_data={'pycdt': release_files},
+    package_data={'eoscdt': release_files},
 
     install_requires=[
     ],
