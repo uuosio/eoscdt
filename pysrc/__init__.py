@@ -58,7 +58,7 @@ def run_eos_cdt():
     subparsers = parser.add_subparsers(dest='subparser')
 
     init = subparsers.add_parser('init')
-    init.add_argument('project_name')
+    # init.add_argument('project_name')
 
     build = subparsers.add_parser('build')
     build.add_argument('--dir-name', default=".")
@@ -68,15 +68,19 @@ def run_eos_cdt():
     if not result or not result.subparser:
         parser.print_usage()
         sys.exit(-1)
-    print(result, result.subparser)
-    if result.subparser == "build":
+    if result.subparser == "init":
+        init()
+    elif result.subparser == "build":
         cur_dir = os.path.abspath(os.curdir)
         cdt_dir = os.path.join(cdt_install_dir, 'release/lib/cmake/cdt')
         os.chdir('build')
-        cmd = f'cmake -DCDT_DIR={cdt_dir} {cur_dir}'
+        cmd = f'cmake -Dcdt_DIR={cdt_dir} {cur_dir}'
         print(cmd)
         cmd = shlex.split(cmd)
         return subprocess.call(cmd)
+
+def run_eos_cdt_get_root_dir():
+    print(os.path.join(cdt_install_dir, 'release'))
 
 def run_eos_cdt_get_dir():
     print(os.path.join(cdt_install_dir, 'release/lib/cmake/cdt'))
