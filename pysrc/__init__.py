@@ -10,11 +10,11 @@ __version__ = "0.1.0"
 
 def get_platform_name():
     if platform.system() == "Linux":
-        print("manylinux1_x86_64")
+        return "manylinux1_x86_64"
     elif platform.system() == "Windows":
-        print("win-amd64")
+        return "win-amd64"
     elif platform.system() == "Darwin":
-        print("macosx_10_15_x86_64")
+        return "macosx_10_15_x86_64"
     else:
         raise Exception("Unknown")
 
