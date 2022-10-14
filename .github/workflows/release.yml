@@ -18,7 +18,7 @@ jobs:
       run:
         shell: bash
     env:
-      EOSCDT_VERSION: 0.1.0
+      EOSCDT_VERSION: 0.1.1
       CDT_VERSION: 0.1.0
     strategy:
       matrix:
@@ -36,12 +36,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Build eoscdt
         run: |
-          python setup.py sdist 
-      - name: Downloading whl files
-        if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-20.04' }}
-        run: |
-          cd dist
-          python ../scripts/download.py ${{ env.EOSCDT_VERSION }}
+          python setup.py sdist
+      # - name: Downloading whl files
+      #   if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-20.04' }}
+      #   run: |
+      #     cd dist
+      #     python ../scripts/download.py ${{ env.EOSCDT_VERSION }}
       - name: Publish a Python distribution to PyPI
         if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-20.04' }}
         uses: pypa/gh-action-pypi-publish@release/v1
