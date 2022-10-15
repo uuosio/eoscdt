@@ -22,7 +22,12 @@ execute_process(
 
     with open('pysrc/release/lib/cmake/cdt/CDTWasmToolchain.cmake', 'r') as f:
         data = f.read()
-        data = data.replace('set(CMAKE_FIND_ROOT_PATH "_PREFIX_")', f'{get_cdt_root_dir}\nset(CMAKE_FIND_ROOT_PATH "${{CDT_ROOT}}/lib/cmake/cdt")\n')
+        data = data.replace('set(CMAKE_FIND_ROOT_PATH "_PREFIX_")', f'''
+{get_cdt_root_dir}
+set(CMAKE_FIND_ROOT_PATH "${{CDT_ROOT}}/lib/cmake/cdt")
+set(cdt_DIR "${{CDT_ROOT}}/lib/cmake/cdt")
+''')
+
     with open('pysrc/release/lib/cmake/cdt/CDTWasmToolchain.cmake', 'w') as f:
         f.write(data)
 
