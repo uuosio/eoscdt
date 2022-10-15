@@ -1,6 +1,7 @@
 import os
 import sys
 import shlex
+import shutil
 import platform
 import subprocess
 import sysconfig
@@ -14,24 +15,51 @@ def get_platform_name():
     if platform.system() == "Linux":
         return "manylinux1_x86_64"
     elif platform.system() == "Windows":
-        return "win-amd64"
+        return "win_amd64"
     elif platform.system() == "Darwin":
         return "macosx_10_15_x86_64"
     else:
         raise Exception("Unknown")
 
-def init():
+def install(whl: str):
+    from pip._internal.cli.main import main as _main
+    _main(['install', '--force-reinstall', whl])
+    os.remove(whl)
+
+def run_reinstall_process(whl: str):
+    subprocess.Popen([sys.executable, '-c', f'import eoscdt; eoscdt.install("{whl}")'], close_fds=True)
+    sys.exit(0)
+
+def check_release(check: bool = False):
     dir_name = os.path.dirname(os.path.realpath(__file__))
     dir_name = os.path.join(dir_name, "release")
     if os.path.exists(dir_name):
         return
-    print('due to the file size limit of pypi, eoscdt installed from pypi does not include binary release. reinstalling...')
-    from pip._internal.cli.main import main as _main
+    if check:
+        print('''
+Due to the file size limit of pypi, eoscdt installed from pypi does not include binary release. reinstalling.
+press Ctrl+C to cancel the installation.
+        ''')
+    else:
+        print('''
+Due to the file size limit of pypi, eoscdt installed from pypi does not include binary release. reinstalling.
+press Ctrl+C to cancel the installation.
+You need to restart the command after the installation finished.
+        ''')
     platfrom_name = get_platform_name()
-    _main(['install', '--force-reinstall', f'https://github.com/uuosio/pycdt/releases/download/v{__version__}/eoscdt-{__version__}-py3-none-{platfrom_name}.whl'])
+    compiler = platform.python_compiler()
+    whl = f'eoscdt-{__version__}-py3-none-{platfrom_name}.whl'
+    
+    from pip._internal.cli.main import main as _main
+    _main(['download', f'--platform={platfrom_name}', '--only-binary=:all:', f'https://github.com/uuosio/pycdt/releases/download/v{__version__}/{whl}'])
+    if compiler.find('GCC Clang') >= 0: # msys2 clang64 platform, need to rename whl file name to pass pip checking
+        whl2 = f'eoscdt-{__version__}-py3-none-mingw_x86_64_clang.whl'
+        shutil.move(whl, whl2)
+        whl = whl2
+    run_reinstall_process(whl)
 
 def run_cmd(cmd: str) -> int:
-    init()
+    check_release()
     dir_name = os.path.dirname(os.path.realpath(__file__))
     dir_name = os.path.join(dir_name, "release")
     cmd = os.path.join(dir_name, f"bin/{cmd}")
@@ -57,7 +85,7 @@ def run_eos_cdt():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser')
 
-    init = subparsers.add_parser('init')
+    init_parser = subparsers.add_parser('init')
     # init.add_argument('project_name')
 
     build = subparsers.add_parser('build')
@@ -69,7 +97,7 @@ def run_eos_cdt():
         parser.print_usage()
         sys.exit(-1)
     if result.subparser == "init":
-        init()
+        check_release()
     elif result.subparser == "build":
         cur_dir = os.path.abspath(os.curdir)
         cdt_dir = os.path.join(cdt_install_dir, 'release/lib/cmake/cdt')
