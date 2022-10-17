@@ -7,7 +7,7 @@ import subprocess
 import sysconfig
 import argparse
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 cdt_install_dir = os.path.dirname(os.path.realpath(__file__))
 
