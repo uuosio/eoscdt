@@ -1,4 +1,6 @@
-# eoscdt
+[CDT](https://github.com/uuosio/cdt) Release with Python Wheel Package
+
+# EOSCDT
 
 ## Installation
 Linux & MacOS X
@@ -25,6 +27,8 @@ cmake -Dcdt_DIR=`cdt-get-dir` -G"Unix Makefiles" ..
 make -j$(nproc)
 ```
 
+If everything goes well, you will find hello.wasm and hello.abi in your build/hello directory.
+
 ## About Windows
 
 It's recommended to use [msys2](https://www.msys2.org) as a build environment.
@@ -48,19 +52,18 @@ eoscdt init
 ```
 
 If you are using Visual Studio Code as an IDE, you can use msys2 bash as your terminal.
-search for `Preferences: Open User Settings(JSON)` and open it
-in the `terminal.integrated.profiles.windows` section, Add the following configuration for msys2
-
+search for `Preferences: Open User Settings(JSON)` and open it. Add the following configuration for msys2
 ```
+"terminal.integrated.env.windows": {
+    "MSYSTEM": "CLANG64",
+    "CHERE_INVOKING": "1",
+    "MSYS2_PATH_TYPE": "inherit",
+    "LIBRARY_PATH": "/clang64/lib"
+},
 "terminal.integrated.profiles.windows": {
     "msys2": {
         "path": "G:\\msys64\\usr\\bin\\bash.exe",
-        "args": ["--login", "-i"],
-        "env": {
-            "MSYSTEM": "CLANG64",
-            "CHERE_INVOKING": "1",
-            "MSYS2_PATH_TYPE": "inherit"
-        }
+        "args": ["--login", "-i"]
     }
 }
 ```
