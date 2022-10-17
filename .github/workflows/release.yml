@@ -19,7 +19,7 @@ jobs:
         shell: bash
     env:
       EOSCDT_VERSION: 0.1.3
-      CDT_VERSION: 0.1.0
+      CDT_VERSION: 0.1.1
     strategy:
       matrix:
         python-version: [3.9]
