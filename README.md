@@ -7,14 +7,14 @@ Linux & MacOS X
 
 ```
 python3 -m pip install -U eoscdt
-eoscdt init
+eoscdt check
 ```
 
 Windows
 
 ```
 python -m pip install -U eoscdt
-eoscdt init
+eoscdt check
 ```
 
 ## Quick start
@@ -48,7 +48,7 @@ pacman --noconfirm -S mingw-w64-clang-x86_64-python-pip
 Finally, install eoscdt
 ```
 python -m pip install -U eoscdt
-eoscdt init
+eoscdt check
 ```
 
 If you are using Visual Studio Code as an IDE, you can use msys2 bash as your terminal.

@@ -6,6 +6,7 @@ import platform
 import subprocess
 import sysconfig
 import argparse
+import multiprocessing
 
 __version__ = "0.1.5"
 
@@ -89,7 +90,7 @@ def run_eos_cdt():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser')
 
-    init_parser = subparsers.add_parser('init')
+    check_parser = subparsers.add_parser('check')
     # init.add_argument('project_name')
 
     build = subparsers.add_parser('build')
@@ -100,16 +101,23 @@ def run_eos_cdt():
     if not result or not result.subparser:
         parser.print_usage()
         sys.exit(-1)
-    if result.subparser == "init":
+    if result.subparser == "check":
         check_release(True)
     elif result.subparser == "build":
         cur_dir = os.path.abspath(os.curdir)
         cdt_dir = os.path.join(cdt_install_dir, 'release/lib/cmake/cdt')
+        if not os.path.exists('build'):
+            os.mkdir('build')
         os.chdir('build')
-        cmd = f'cmake -Dcdt_DIR={cdt_dir} {cur_dir}'
+        cmd = f'cmake -Dcdt_DIR={cdt_dir} -G"Unix Makefiles" {cur_dir}'
         print(cmd)
         cmd = shlex.split(cmd)
-        return subprocess.call(cmd)
+        ret = subprocess.call(cmd)
+        if ret != 0:
+            sys.exit(ret)
+        cpu_count = multiprocessing.cpu_count()
+        ret = subprocess.call(['make', f'-j{cpu_count}'])
+        sys.exit(ret)
 
 def run_eos_cdt_get_root_dir():
     print(os.path.join(cdt_install_dir, 'release'))
