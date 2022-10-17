@@ -21,7 +21,7 @@ cdt-init --project hello
 cd hello
 mkdir build
 cd build
-cmake -Dcdt_DIR=`cdt-get-dir` ..
+cmake -Dcdt_DIR=`cdt-get-dir` -G"Unix Makefiles" ..
 make -j$(nproc)
 ```
 
@@ -46,3 +46,25 @@ Finally, install eoscdt
 python -m pip install -U eoscdt
 eoscdt init
 ```
+
+If you are using Visual Studio Code as an IDE, you can use msys2 bash as your terminal.
+search for `Preferences: Open User Settings(JSON)` and open it
+in the `terminal.integrated.profiles.windows` section, Add the following configuration for msys2
+
+```
+"terminal.integrated.profiles.windows": {
+    "msys2": {
+        "path": "G:\\msys64\\usr\\bin\\bash.exe",
+        "args": ["--login", "-i"],
+        "env": {
+            "MSYSTEM": "CLANG64",
+            "CHERE_INVOKING": "1",
+            "MSYS2_PATH_TYPE": "inherit"
+        }
+    }
+}
+```
+
+Change `G:\\msys64\\usr\\bin\\bash.exe` to the location of bash.exe you installed.
+
+For more detials, please see [Terminal Profiles](https://code.visualstudio.com/docs/terminal/profiles#_configuring-profiles)
