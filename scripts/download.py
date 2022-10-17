@@ -10,7 +10,7 @@ files = [
     f'eoscdt-{version}-py3-none-win_amd64.whl',
 ]
 
-url = f'https://github.com/uuosio/pycdt/releases/download/v{version}/'
+url = f'https://github.com/uuosio/eoscdt/releases/download/v{version}/'
 for f in files:
     count = 60*60/10
     while True:

@@ -49,7 +49,7 @@ version = '%s.%s' % (version[0], version[1])
 
 setup(
     name="eoscdt",
-    version="0.1.4",
+    version="0.1.5",
     description="eoscdt project",
     author='The EOSCDT Team',
     license="MIT",

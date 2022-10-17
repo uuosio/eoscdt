@@ -7,7 +7,7 @@ import subprocess
 import sysconfig
 import argparse
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 cdt_install_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -28,7 +28,7 @@ from pip._internal.cli.main import main as _main
 _main(['install', '--force-reinstall', '{whl}'])
 os.remove('{whl}')
 '''
-    print('start reinstalltion')
+    print('start reinstallation')
     subprocess.Popen([sys.executable, '-c', reinstall_code], close_fds=True)
     sys.exit(0)
 
@@ -53,7 +53,7 @@ You need to restart the command after the installation finished.
     whl = f'eoscdt-{__version__}-py3-none-{platfrom_name}.whl'
     
     from pip._internal.cli.main import main as _main
-    _main(['download', f'--platform={platfrom_name}', '--only-binary=:all:', f'https://github.com/uuosio/pycdt/releases/download/v{__version__}/{whl}'])
+    _main(['download', f'--platform={platfrom_name}', '--only-binary=:all:', f'https://github.com/uuosio/eoscdt/releases/download/v{__version__}/{whl}'])
     if not os.path.exists(whl):
         raise Exception('download failed!')
     if compiler.find('GCC Clang') >= 0: # msys2 clang64 platform, need to rename whl file name to pass pip checking
