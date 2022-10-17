@@ -21,13 +21,15 @@ def get_platform_name():
     else:
         raise Exception("Unknown")
 
-def install(whl: str):
-    from pip._internal.cli.main import main as _main
-    _main(['install', '--force-reinstall', whl])
-    os.remove(whl)
-
 def run_reinstall_process(whl: str):
-    subprocess.Popen([sys.executable, '-c', f'import eoscdt; eoscdt.install("{whl}")'], close_fds=True)
+    reinstall_code = f'''
+import os
+from pip._internal.cli.main import main as _main
+_main(['install', '--force-reinstall', '{whl}'])
+os.remove('{whl}')
+'''
+    print('start reinstalltion')
+    subprocess.Popen([sys.executable, '-c', reinstall_code], close_fds=True)
     sys.exit(0)
 
 def check_release(check: bool = False):
@@ -52,6 +54,8 @@ You need to restart the command after the installation finished.
     
     from pip._internal.cli.main import main as _main
     _main(['download', f'--platform={platfrom_name}', '--only-binary=:all:', f'https://github.com/uuosio/pycdt/releases/download/v{__version__}/{whl}'])
+    if not os.path.exists(whl):
+        raise Exception('download failed!')
     if compiler.find('GCC Clang') >= 0: # msys2 clang64 platform, need to rename whl file name to pass pip checking
         whl2 = f'eoscdt-{__version__}-py3-none-mingw_x86_64_clang.whl'
         shutil.move(whl, whl2)
@@ -97,7 +101,7 @@ def run_eos_cdt():
         parser.print_usage()
         sys.exit(-1)
     if result.subparser == "init":
-        check_release()
+        check_release(True)
     elif result.subparser == "build":
         cur_dir = os.path.abspath(os.curdir)
         cdt_dir = os.path.join(cdt_install_dir, 'release/lib/cmake/cdt')

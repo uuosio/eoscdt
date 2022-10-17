@@ -12,7 +12,7 @@ def patch():
         return
     get_cdt_root_dir = '''
 execute_process(
-   COMMAND eoscdt-get-root-dir
+   COMMAND cdt-get-root-dir
             OUTPUT_VARIABLE CDT_ROOT
             OUTPUT_STRIP_TRAILING_WHITESPACE
             ERROR_STRIP_TRAILING_WHITESPACE
