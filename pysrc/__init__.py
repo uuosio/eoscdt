@@ -7,6 +7,8 @@ import subprocess
 import sysconfig
 import argparse
 import multiprocessing
+import tempfile
+from pip._internal.cli.main import main as _main
 
 __version__ = "0.1.6"
 
@@ -25,10 +27,11 @@ def get_platform_name():
 def run_reinstall_process(whl: str):
     reinstall_code = f'''
 import os
+import shutil
 from pip._internal.cli.main import main as _main
 print('start reinstallation')
 _main(['install', '--force-reinstall', '{whl}'])
-os.remove('{whl}')
+shutil.rmtree(os.path.dirname('{whl}'))
 print('done!')
 '''
     subprocess.Popen([sys.executable, '-c', reinstall_code], close_fds=True)
@@ -52,16 +55,25 @@ You need to restart the command after the installation finished.
         ''')
     platfrom_name = get_platform_name()
     whl = f'eoscdt-{__version__}-py3-none-{platfrom_name}.whl'
-
-    from pip._internal.cli.main import main as _main
-    _main(['download', f'--platform={platfrom_name}', '--only-binary=:all:', f'https://github.com/uuosio/eoscdt/releases/download/v{__version__}/{whl}'])
-    if not os.path.exists(whl):
+    tmp_dir = tempfile.mkdtemp()
+    dest_path = os.path.join(tmp_dir, whl)
+    # print(dest_path)
+    cmd = [
+        'download',
+        f'--platform={platfrom_name}',
+        '--only-binary=:all:',
+        '--dest', tmp_dir,
+        f'https://github.com/uuosio/eoscdt/releases/download/v{__version__}/{whl}'
+    ]
+    # print(cmd)
+    _main(cmd)
+    if not os.path.exists(dest_path):
         raise Exception('download failed!')
     if platform.system() == 'Windows': # msys2 clang64 platform, need to rename whl file name to pass pip checking
-        whl2 = f'eoscdt-{__version__}-py3-none-any.whl'
-        shutil.move(whl, whl2)
-        whl = whl2
-    run_reinstall_process(whl)
+        dest_path2 = os.path.join(tmp_dir, f'eoscdt-{__version__}-py3-none-any.whl')
+        shutil.move(dest_path, dest_path2)
+        dest_path = dest_path2
+    run_reinstall_process(dest_path)
 
 def run_cmd(cmd: str) -> int:
     check_release()
