@@ -26,10 +26,11 @@ def run_reinstall_process(whl: str):
     reinstall_code = f'''
 import os
 from pip._internal.cli.main import main as _main
+print('start reinstallation')
 _main(['install', '--force-reinstall', '{whl}'])
 os.remove('{whl}')
+print('done!')
 '''
-    print('start reinstallation')
     subprocess.Popen([sys.executable, '-c', reinstall_code], close_fds=True)
     sys.exit(0)
 
@@ -50,15 +51,14 @@ press Ctrl+C to cancel the installation.
 You need to restart the command after the installation finished.
         ''')
     platfrom_name = get_platform_name()
-    compiler = platform.python_compiler()
     whl = f'eoscdt-{__version__}-py3-none-{platfrom_name}.whl'
-    
+
     from pip._internal.cli.main import main as _main
     _main(['download', f'--platform={platfrom_name}', '--only-binary=:all:', f'https://github.com/uuosio/eoscdt/releases/download/v{__version__}/{whl}'])
     if not os.path.exists(whl):
         raise Exception('download failed!')
-    if compiler.find('GCC Clang') >= 0: # msys2 clang64 platform, need to rename whl file name to pass pip checking
-        whl2 = f'eoscdt-{__version__}-py3-none-mingw_x86_64_clang.whl'
+    if platform.system() == 'Windows': # msys2 clang64 platform, need to rename whl file name to pass pip checking
+        whl2 = f'eoscdt-{__version__}-py3-none-any.whl'
         shutil.move(whl, whl2)
         whl = whl2
     run_reinstall_process(whl)
@@ -71,20 +71,56 @@ def run_cmd(cmd: str) -> int:
     sys.argv[0] = cmd
     return subprocess.call(sys.argv, stdout=sys.stdout, stderr=sys.stderr)
 
-def run_cdt_init():
+def run_init():
     return run_cmd('cdt-init')
 
-def run_cdt_cpp():
+def run_cpp():
     return run_cmd('cdt-cpp')
 
-def run_cdt_cc():
+def run_cc():
     return run_cmd('cdt-cc')
 
-def run_cdt_pp():
+def run_pp():
     return run_cmd('cdt-pp')
 
-def run_cdt_ld():
+def run_ld():
     return run_cmd('cdt-ld')
+
+def run_abidiff():
+    return run_cmd('cdt-abidiff')
+
+def run_ranlib():
+    return run_cmd('llvm-ranlib')
+
+def run_ar():
+    return run_cmd('llvm-ar')
+
+def run_nm():
+    return run_cmd('llvm-nm')
+
+def run_objcopy():
+    return run_cmd('llvm-objcopy')
+
+def run_objdump():
+    return run_cmd('llvm-objdump')
+
+def run_readobj():
+    return run_cmd('llvm-readobj')
+
+def run_readelf():
+    return run_cmd('llvm-readelf')
+
+def run_strip():
+    return run_cmd('llvm-strip')
+
+def run_pp():
+    return run_cmd('eosio-pp')
+
+def run_wast2wasm():
+    return run_cmd('eosio-wast2wasm')
+
+def run_wasm2wast():
+    return run_cmd('eosio-wasm2wast')
 
 def run_eos_cdt():
     parser = argparse.ArgumentParser()
