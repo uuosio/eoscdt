@@ -8,7 +8,7 @@ import sysconfig
 import argparse
 import multiprocessing
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 
 cdt_install_dir = os.path.dirname(os.path.realpath(__file__))
 
