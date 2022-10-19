@@ -70,4 +70,4 @@ search for `Preferences: Open User Settings(JSON)` and open it. Add the followin
 
 Change `G:\\msys64\\usr\\bin\\bash.exe` to the location of bash.exe you installed.
 
-For more detials, please see [Terminal Profiles](https://code.visualstudio.com/docs/terminal/profiles#_configuring-profiles)
+For more details, please see [Terminal Profiles](https://code.visualstudio.com/docs/terminal/profiles#_configuring-profiles)
