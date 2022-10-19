@@ -10,7 +10,7 @@ import multiprocessing
 import tempfile
 from pip._internal.cli.main import main as _main
 
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 
 cdt_install_dir = os.path.dirname(os.path.realpath(__file__))
 
