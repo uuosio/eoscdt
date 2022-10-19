@@ -156,15 +156,19 @@ def run_eos_cdt():
         cdt_dir = os.path.join(cdt_install_dir, 'release/lib/cmake/cdt')
         if not os.path.exists('build'):
             os.mkdir('build')
-        os.chdir('build')
-        cmd = f'cmake -Dcdt_DIR={cdt_dir} -G"Unix Makefiles" {cur_dir}'
+        cur_path = os.path.abspath(os.curdir)
+        cur_dir = os.path.basename(cur_path)
+        if not cur_dir == 'build':
+            os.chdir('build')
+        cmd = f'cmake -Dcdt_DIR={cdt_dir} -GNinja ..'
         print(cmd)
         cmd = shlex.split(cmd)
         ret = subprocess.call(cmd)
         if ret != 0:
             sys.exit(ret)
         cpu_count = multiprocessing.cpu_count()
-        ret = subprocess.call(['make', f'-j{cpu_count}'])
+        # ret = subprocess.call(['make', f'-j{cpu_count}'])
+        ret = subprocess.call(['ninja'])
         sys.exit(ret)
 
 def run_eos_cdt_get_root_dir():
